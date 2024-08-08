@@ -19,12 +19,12 @@
         }
         canvas {
             border: 1px solid #000;
-            margin-bottom: 20px;
+            background-color: #c7f0d8;
         }
         #highScores {
             text-align: left;
             max-width: 320px;
-            margin: 0 auto;
+            margin: 20px auto;
         }
         #nameForm {
             display: none;
@@ -50,7 +50,6 @@
         const CELL_SIZE = 20;
         const GRID_WIDTH = 16;
         const GRID_HEIGHT = 16;
-        const BACKGROUND_COLOR = '#c7f0d8';
         const SNAKE_COLOR = '#212121';
         const FOOD_COLOR = '#212121';
 
@@ -75,8 +74,7 @@
         }
 
         function drawGame() {
-            ctx.fillStyle = BACKGROUND_COLOR;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = SNAKE_COLOR;
             snake.forEach(segment => {
@@ -115,7 +113,7 @@
         }
 
         function drawGameOverScreen() {
-            ctx.fillStyle = BACKGROUND_COLOR;
+            ctx.fillStyle = '#c7f0d8';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             ctx.fillStyle = SNAKE_COLOR;
@@ -180,12 +178,13 @@
                 displayHighScores();
             } catch (error) {
                 console.error('Error loading high scores:', error);
+                highScoresElement.innerHTML = '<p>Failed to load high scores. Please try again later.</p>';
             }
         }
 
         function displayHighScores() {
             highScoresElement.innerHTML = '<h2>High Scores</h2>';
-            highScores.slice(0, 5).forEach((score, index) => {
+            highScores.forEach((score, index) => {
                 const date = new Date(score.timestamp);
                 highScoresElement.innerHTML += `
                     <p>${index + 1}. ${score.name}: ${score.score} 
