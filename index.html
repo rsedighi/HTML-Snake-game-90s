@@ -172,7 +172,10 @@
         async function loadHighScores() {
             try {
                 const response = await fetch('/.netlify/functions/getHighscore');
-                if (!response.ok) throw new Error('Failed to load high scores');
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Failed to load high scores: ${response.status} ${errorText}`);
+                }
                 highScores = await response.json();
                 displayHighScores();
             } catch (error) {
@@ -211,16 +214,22 @@
             try {
                 const response = await fetch('/.netlify/functions/saveHighscore', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(newScore)
                 });
-                if (!response.ok) throw new Error('Failed to save high score');
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Failed to save high score: ${response.status} ${errorText}`);
+                }
                 await loadHighScores();
                 nameForm.style.display = 'none';
                 resetGame();
                 gameLoop();
             } catch (error) {
                 console.error('Error saving high score:', error);
-                alert('Failed to save high score. Please try again.');
+                alert(`Failed to save high score. Please try again. Error: ${error.message}`);
             }
         }
 
